@@ -63,4 +63,4 @@ JOB_COMPLETION_INDEX(Kubernetes Indexed Job)를 기준으로 맡은 프레임을
 동일한 절차로 재구축할 수 있습니다. 재구축 절차와 클라우드별로 바뀌는 부분(로드밸런서, 보안그룹 등)은
 docs/SETUP.md에 정리했습니다.
 
-붙여넣은 다음 오른쪽 위 "Commit changes..." 버튼 눌러줘.
+
