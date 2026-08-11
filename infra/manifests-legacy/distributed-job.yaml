@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: render-distributed
+  namespace: render-farm
+spec:
+  completionMode: Indexed
+  completions: 24
+  parallelism: 6
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: worker
+          image: 192.168.2.75:5000/mandelbrot-worker:latest
+          envFrom:
+            - configMapRef:
+                name: render-config
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          volumeMounts:
+            - name: output
+              mountPath: /output
+      volumes:
+        - name: output
+          persistentVolumeClaim:
+            claimName: render-output-pvc

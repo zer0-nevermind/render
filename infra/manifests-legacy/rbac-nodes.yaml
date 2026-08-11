@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: render-api-node-reader
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes", "pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: render-api-node-reader-binding
+subjects:
+  - kind: ServiceAccount
+    name: render-api-sa
+    namespace: render-farm
+roleRef:
+  kind: ClusterRole
+  name: render-api-node-reader
+  apiGroup: rbac.authorization.k8s.io

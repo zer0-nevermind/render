@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: render-api
+  namespace: render-farm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: render-api
+  template:
+    metadata:
+      labels:
+        app: render-api
+    spec:
+      serviceAccountName: render-api-sa
+      containers:
+        - name: render-api
+          image: 192.168.2.75:5000/render-api:latest
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: output
+              mountPath: /output
+      volumes:
+        - name: output
+          persistentVolumeClaim:
+            claimName: render-output-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: render-api-svc
+  namespace: render-farm
+spec:
+  selector:
+    app: render-api
+  ports:
+    - port: 80
+      targetPort: 5000

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: render-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app: render-api
+  template:
+    metadata:
+      labels:
+        app: render-api
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: render-api
+          image: "{{ .Values.image.registry }}/{{ .Values.image.api.repository }}:{{ .Values.image.api.tag }}"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: output
+              mountPath: /output
+      volumes:
+        - name: output
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.pvcName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: render-api-svc
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: render-api
+  ports:
+    - port: {{ .Values.api.service.port }}
+      targetPort: {{ .Values.api.service.targetPort }}

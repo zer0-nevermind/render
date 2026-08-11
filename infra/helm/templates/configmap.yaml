@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: render-config
+  namespace: {{ .Release.Namespace }}
+data:
+  TOTAL_FRAMES: {{ .Values.render.totalFrames | quote }}
+  MAX_ITER: {{ .Values.render.maxIter | quote }}
+  FRAME_WIDTH: {{ .Values.render.frameWidth | quote }}
+  FRAME_HEIGHT: {{ .Values.render.frameHeight | quote }}
+  CENTER_X: {{ .Values.render.centerX | quote }}
+  CENTER_Y: {{ .Values.render.centerY | quote }}

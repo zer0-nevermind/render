@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: render-farm-ing
+  namespace: render-farm
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /render(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: render-api-svc
+                port:
+                  number: 80

@@ -1,0 +1,43 @@
+image:
+  registry: 192.168.2.75:5000
+  api:
+    repository: render-api
+    tag: latest
+  worker:
+    repository: mandelbrot-worker
+    tag: latest
+
+serviceAccount:
+  name: render-api-sa
+
+api:
+  replicas: 1
+  service:
+    port: 80
+    targetPort: 5000
+
+ingress:
+  className: nginx
+  path: /render(/|$)(.*)
+
+storage:
+  pvcName: render-output-pvc
+  storageClassName: nfs-client
+  size: 2Gi
+
+render:
+  totalFrames: 24
+  maxIter: 300
+  frameWidth: 640
+  frameHeight: 480
+  centerX: "-0.743643887037151"
+  centerY: "0.13182590420533"
+
+worker:
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "512Mi"
